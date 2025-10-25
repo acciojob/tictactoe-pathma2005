@@ -6,45 +6,44 @@ const submitBtn = document.querySelector("#submit");
 
 let player1 = "";
 let player2 = "";
-let turn = "X"; // should be uppercase to match your winner logic
+let turn = "X";
 let board = ["", "", "", "", "", "", "", "", ""];
 
-// ❌ Wrong: 'cell' was used directly — it doesn’t exist yet
-// ✅ Correct: use submitBtn to start the game
 submitBtn.addEventListener("click", () => {
- player1 = document.getElementById("player1").value.trim();
-player2 = document.getElementById("player2").value.trim();
+  player1 = document.getElementById("player-1").value.trim();
+  player2 = document.getElementById("player-2").value.trim();
 
-  if (player1 === "" || player2 === "") {
+  if(player1 === "" || player2 === "") {
     alert("Please enter both player names");
     return;
   }
 
   playerInputDiv.style.display = "none";
-  gameBoardDiv.style.display = "block";
+  gameBoardDiv.style.display = "grid"; // show board
   messageDiv.textContent = `${player1}, you're up!`;
 });
 
 cells.forEach(cell => {
   cell.addEventListener("click", () => {
     const index = parseInt(cell.id) - 1;
-    if (board[index] !== "") return;
+    if(board[index] !== "") return; // already marked
 
     board[index] = turn;
     cell.textContent = turn;
 
-    if (checkWinner()) {
+    if(checkWinner()) {
       const winnerName = turn === "X" ? player1 : player2;
       messageDiv.textContent = `${winnerName}, congratulations you won!`;
       disableBoard();
       return;
     }
 
-    if (board.every(cell => cell !== "")) {
+    if(board.every(cell => cell !== "")) {
       messageDiv.textContent = "It's a draw!";
       return;
     }
 
+    // switch turn
     turn = turn === "X" ? "O" : "X";
     messageDiv.textContent = turn === "X" ? `${player1}, you're up!` : `${player2}, you're up!`;
   });
@@ -57,12 +56,12 @@ function checkWinner() {
     [0,4,8],[2,4,6]
   ];
 
-  for (let combo of winCombos) {
-    const [a, b, c] = combo;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      cells[a].classList.add('winner');
-      cells[b].classList.add('winner');
-      cells[c].classList.add('winner');
+  for(let combo of winCombos) {
+    const [a,b,c] = combo;
+    if(board[a] && board[a] === board[b] && board[a] === board[c]) {
+      cells[a].classList.add("winner");
+      cells[b].classList.add("winner");
+      cells[c].classList.add("winner");
       return true;
     }
   }
@@ -72,4 +71,5 @@ function checkWinner() {
 function disableBoard() {
   cells.forEach(cell => cell.style.pointerEvents = "none");
 }
+
 
