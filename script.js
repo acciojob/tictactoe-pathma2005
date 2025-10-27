@@ -9,7 +9,7 @@ const cells = document.querySelectorAll(".cell");
 let player1 = "";
 let player2 = "";
 let currentPlayer = "";
-let currentSymbol = "x"; // lowercase
+let currentSymbol = "x";
 let gameActive = true;
 let boardState = ["", "", "", "", "", "", "", "", ""];
 
@@ -31,7 +31,7 @@ submitBtn.addEventListener("click", () => {
   inputSection.style.display = "none";
   board.style.display = "block";
   currentPlayer = player1;
-  messageDiv.textContent = `${currentPlayer}, you're up`;
+  messageDiv.textContent = `${currentPlayer}, you're up`; // ✅ exact text for test
 });
 
 cells.forEach((cell, index) => {
@@ -42,7 +42,7 @@ cells.forEach((cell, index) => {
     boardState[index] = currentSymbol;
 
     if (checkWinner()) {
-      messageDiv.textContent = `${currentPlayer}, congratulations you won!`;
+      messageDiv.textContent = `${currentPlayer} congratulations you won!`; // ✅ exact match
       gameActive = false;
       return;
     }
@@ -55,7 +55,7 @@ cells.forEach((cell, index) => {
 
     currentSymbol = currentSymbol === "x" ? "o" : "x";
     currentPlayer = currentPlayer === player1 ? player2 : player1;
-    messageDiv.textContent = `${currentPlayer}, you're up`;
+    messageDiv.textContent = `${currentPlayer}, you're up`; // ✅ exact match
   });
 });
 
@@ -69,4 +69,5 @@ function checkWinner() {
     );
   });
 }
+
 
