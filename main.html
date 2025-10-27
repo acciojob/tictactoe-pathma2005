@@ -5,7 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tic Tac Toe</title>
   <link rel="stylesheet" href="style.css" />
-  </head>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f3f3f3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    .input-section input {
+      margin: 10px;
+      padding: 8px;
+      width: 80%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .input-section button {
+      padding: 8px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .input-section button:hover {
+      background-color: #0056b3;
+    }
+
+    .board {
+      display: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin: 20px auto;
+      justify-content: center;
+    }
+
+    .cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #eee;
+      font-size: 2rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .cell:hover {
+      background-color: #dcdcdc;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
 
 <body>
   <div class="container">
@@ -33,6 +110,86 @@
       </div>
     </div>
   </div>
-   <script src="scripts.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const player1Input = document.getElementById("player1");
+      const player2Input = document.getElementById("player2");
+      const submitBtn = document.getElementById("submit");
+      const inputSection = document.querySelector(".input-section");
+      const board = document.querySelector(".board");
+      const messageDiv = document.querySelector(".message");
+      const cells = document.querySelectorAll(".cell");
+
+      let player1 = "";
+      let player2 = "";
+      let currentPlayer = "";
+      let currentSymbol = "x";
+      let gameActive = true;
+      let boardState = ["", "", "", "", "", "", "", "", ""];
+
+      const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      submitBtn.addEventListener("click", () => {
+        player1 = player1Input.value.trim();
+        player2 = player2Input.value.trim();
+
+        if (player1 === "" || player2 === "") {
+          alert("Please enter both player names!");
+          return;
+        }
+
+        inputSection.style.display = "none";
+        board.style.display = "block";
+        currentPlayer = player1;
+        messageDiv.textContent = `${currentPlayer}, you're up`;
+      });
+
+      cells.forEach((cell, index) => {
+        cell.addEventListener("click", () => {
+          if (!gameActive || cell.textContent !== "") return;
+
+          cell.textContent = currentSymbol;
+          boardState[index] = currentSymbol;
+
+          if (checkWinner()) {
+            messageDiv.textContent = `${currentPlayer} congratulations you won!`;
+            gameActive = false;
+            return;
+          }
+
+          if (!boardState.includes("")) {
+            messageDiv.textContent = "It's a draw!";
+            gameActive = false;
+            return;
+          }
+
+          currentSymbol = currentSymbol === "x" ? "o" : "x";
+          currentPlayer = currentPlayer === player1 ? player2 : player1;
+          messageDiv.textContent = `${currentPlayer}, you're up`;
+        });
+      });
+
+      function checkWinner() {
+        return winPatterns.some((pattern) => {
+          const [a, b, c] = pattern;
+          return (
+            boardState[a] &&
+            boardState[a] === boardState[b] &&
+            boardState[a] === boardState[c]
+          );
+        });
+      }
+    });
+  </script>
 </body>
 </html>
